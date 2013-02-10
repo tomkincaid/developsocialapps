@@ -1,0 +1,54 @@
+/* baisc styles */
+
+.gray {
+	color:#777777;
+}
+
+.mediumtext {
+	font-size:0.9em;
+}
+
+.smalltext {
+	font-size:0.8em;
+}
+
+.normaltext {
+	font-size:1.0em!important;
+	font-weight:normal!important;
+}
+
+.highlight {
+	color:#E17009 ;
+}
+
+
+/* layout */
+
+.topspace {
+	margin-top:20px;
+}
+.bottomspace {
+	margin-bottom:20px;
+}
+.halftopspace {
+	margin-top:10px;
+}
+.halfbottomspace {
+	margin-bottom:10px;
+}
+.smalltopspace {
+	margin-top:5px;
+}
+.smallbottomspace {
+	margin-bottom:5px;
+}
+.notopspace {
+	margin-top:0px!important;
+}
+.nobottomspace {
+	margin-bottom:0px;!important;
+}
+
+.center {
+	text-align:center;
+}

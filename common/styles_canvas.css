@@ -1,0 +1,243 @@
+/* baisc styles */
+
+body {
+    color: #333333;
+	background-color: #ffffff;
+    font-family: 'lucida grande',tahoma,sans-serif;
+    font-size: 0.9em;
+    text-align: left;
+	width:728px;
+	padding:20px 0px 20px 0px;
+	margin:0px;
+}
+
+a, .ui-widget-content a {
+	color:#3B5998; /*2E6E9E;*/
+	cursor:pointer;
+}
+a:link, a:visited {
+	text-decoration:none;
+}
+a:hover, a:active {
+	text-decoration:underline;
+}
+
+h1 {
+	font-size:1.4em;
+	margin-top:0px;
+	margin-bottom:1em;
+	letter-spacing:1px;
+}
+
+h2 {
+	font-size:1.2em;
+	margin-top:1.2em;
+	margin-bottom:1.0em;
+	letter-spacing:1px;
+}
+
+h3 {
+	font-size:1.0em;
+	margin-top:1.0em;
+	margin-bottom:1.0em;
+	letter-spacing:1px;
+}
+
+p {
+	margin-top:1.0em;
+	margin-bottom:0px;
+	line-height:1.5em;
+}
+
+.inputtext, .select {
+	border: 1px solid #4297D7;
+	border-radius:5px;
+	padding:5px;
+	background-color:#ffffff;
+}
+
+
+/* layout */
+
+.footer {
+	font-size:0.8em;
+	text-align:center;
+	margin-top:20px;
+	line-height:1.5em;
+}
+
+.ad_top {
+	margin:20px 0px 20px 0px;
+}
+
+.ad_right {
+	float:right;
+}
+
+.tab_content {
+	width:500px;
+	min-height:800px;
+}
+
+.halfleft {
+	width:230px;
+	float:left;
+}
+.halfright {
+	width:230px;
+	/*float:right;*/
+	padding-left:19px;
+	border-left: 1px dashed #A6C9E2;
+	margin-left:249px;
+}
+
+.topspace {
+	margin-top:20px;
+}
+.bottomspace {
+	margin-bottom:20px;
+}
+.halftopspace {
+	margin-top:10px;
+}
+.halfbottomspace {
+	margin-bottom:10px;
+}
+.smalltopspace {
+	margin-top:5px;
+}
+.smallbottomspace {
+	margin-bottom:5px;
+}
+.notopspace {
+	margin-top:0px!important;
+}
+.nobottomspace {
+	margin-bottom:0px;!important;
+}
+
+/* override jquery ui */
+
+.ui-widget {
+    font-family: 'lucida grande',tahoma,sans-serif!important;
+    font-size: 1.0em!important;
+}
+
+.ui-tabs {
+	padding:3px!important;
+}
+
+.ui-tabs .ui-tabs-nav {
+	padding:3px 3px 0px 3px!important;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+	padding:6px 17px 6px 17px!important;
+}
+
+.ui-tabs .ui-tabs-panel {
+	padding:20px!important;
+	min-height:600px;
+}
+
+.ui-widget-overlay {
+	background-image:none!important;
+    background-color:#ffffff!important;
+	opacity:0.7!important;
+}
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+	color:#3B5998;
+}
+
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+	color:#E17009;
+}
+
+.ui-dialog-buttonpane {
+	border:0px;
+	margin:0px;
+	padding:0px;
+}
+
+
+/*------------------- mine ----------*/
+
+.titleicon {
+	height:24px;
+	width:24px;
+	float:left;
+	margin-right:10px;
+	position:relative;
+	top:-2px;
+}
+
+.status {
+	background-color:#FFF9D7;
+	border:1px solid #E2C822;
+	padding:10px;
+	border-radius:5px;
+	font-size:1.1em;
+	font-weight:bold;
+}
+
+.error {
+	background-color:#FFEBE8;
+	border:1px solid #DD3C10;
+	padding:10px;
+	border-radius:5px;
+	font-size:1.1em;
+	font-weight:bold;
+}
+
+.section {
+	margin-top:20px;
+}
+
+.section h2 {
+	color:#777777;
+	margin:0px;
+	padding: 0px 0px 10px 0px;
+	border-bottom: 1px dashed #A6C9E2;
+	text-transform:uppercase;
+}
+
+.subsection {
+	margin-top:10px;
+}
+
+.bottomborder {
+	padding-bottom:10px;
+	border-bottom: 1px dashed #A6C9E2;
+}
+
+.topborder {
+	padding-top:10px;
+	border-top: 1px dashed #A6C9E2;
+}
+
+/* ads and promos */
+
+.promotop {
+	margin-bottom:20px;
+	font-size:12px;
+}
+
+.promotopitem {
+	display: inline-block;
+	width:364px;
+	overflow:hidden;
+	height:20px;
+	/* makes it work in IE7 */
+	zoom:1; 
+	*display: inline;
+}
+
+.promotop img {
+	width:16px;
+	height:16px;
+	border:0px;
+	margin-right:6px;
+	position:relative;
+	top:4px;
+}
