@@ -20,12 +20,16 @@ If you use this code, please give provide a link on your site to
 
 */
 
+error_reporting(E_ERROR);
+
 require_once("cache.php");
 require_once("curlclient.php");
 require_once("facebookapp.php");
 require_once("user.php");
 
 $GLOBALS['apptype'] = "canvas";
+
+
 
 
 /*	initilaize an app
@@ -111,7 +115,8 @@ function initFacebookApp($requireauth=false,$additionalpermissions=false) {
 		}
 		if ($requireauth) {
 			// go back to url for current page
-			$success_uri = $_SERVER['SCRIPT_URI']."?".$_SERVER['QUERY_STRING'];
+			$success_uri = ($_SERVER['HTTPS'] == "on") ? "https://" : "http://";
+			$success_uri .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 			// use facebookapp object to check for cookie and send to auth dialog
 			$facebookapp->requireAuthorization($GLOBALS['webRedirectUrl'], $success_uri, $GLOBALS['facebookPermissions'], $authorized);
 		}
@@ -143,7 +148,8 @@ function initFacebookApp($requireauth=false,$additionalpermissions=false) {
 	} else {
 		// web and mobile apps will get ?code= from link, send to rediret page
 		if (isset($_GET['code']) && (stripos($_SERVER['REQUEST_URI'],$GLOBALS['facebookRedirectPage']) === false) && ($_GET['fb_source'] != "notification")) {
-			$successuri = $_SERVER['SCRIPT_URI'];
+			$successuri = ($_SERVER['HTTPS'] == "on") ? "https://" : "http://";
+			$successuri .= $_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'];
 			$delimiter = "?";
 			foreach ($_GET as $key=>$val) {
 				if ($key == "code") {
@@ -266,35 +272,34 @@ function requireLongAccessToken($additionalpermissions=false,$url=false) {
 	}
 }
 
-/* 	updates user table
-	$apidata=array("column"=>"api_index","email"=>"email") data that needs graph api to "me"
-	$additionaldata=array("column"=>"value","name"=>"Tom")	additional data to put in user table 	*/
+/*     updates user table
+    $apidata=array("column"=>"api_index","email"=>"email") data that needs graph api to "me"
+    $additionaldata=array("column"=>"value","name"=>"Tom")    additional data to put in user table     */
 function updateUserData($apidata=array("email"=>"email"),$additionaldata=array()) {
-	global $facebookapp, $db;
-	$now = getDbFormattedDate();
-	if (count($apidata) > 0) {
-		$userinfo = $facebookapp->getGraphObject("me");
-		if ($userinfo === false) {
-			// something went wrong so clear cookies and go to home page 
-			clearAppCookies();
-			doRedirect($facebookapp->getCanvasUrl(""));
-		} else {
-			foreach ($apidata as $column => $index) {
-				if (isset($userinfo[$index])) {
-					if (($index != "email") || (strpos($userinfo[$index],"@") !== false)) {
-						$additionaldata[$column] = $userinfo[$index];
-					}
-				}
-			}
-		}
-	}
-	$sql = "insert into user (userid, token, tokenexpiration, added, active";
-	foreach ($additionaldata as $column => $value) $sql .= ", ".$column;
-	$sql .= ") values ('".$db->real_escape_string($facebookapp->userId)."', '".$db->real_escape_string($facebookapp->token)."', '".$db->real_escape_string($facebookapp->tokenExpires)."', '".$db->real_escape_string($now)."', '".$db->real_escape_string($now)."'";
-	foreach ($additionaldata as $column => $value) $sql .= ", '".$db->real_escape_string($value)."'";
-	$sql .= ") on duplicate key update token='".$db->real_escape_string($facebookapp->token)."', tokenexpiration='".$db->real_escape_string($facebookapp->tokenExpires)."', removed='0000-00-00 00:00:00', active='".$db->real_escape_string($now)."'";
-	foreach ($additionaldata as $column => $value) $sql .= ", ".$column."='".$db->real_escape_string($value)."'";
-	$db->query($sql);
+    global $facebookapp, $db;
+    $now = getDbFormattedDate();
+    if (count($apidata) > 0) {
+        $userinfo = $facebookapp->getGraphObject("me");
+        if ($userinfo === false) {
+            // something went wrong so clear cookies and go to home page 
+            clearAppCookies();
+            echo "<html>\n<body>\n<script>\ntop.location.href='".$facebookapp->getCanvasUrl()."';\n</script></body></html>";
+            exit();
+        } else {
+            foreach ($apidata as $column => $index) {
+                if (isset($userinfo[$index])) {
+                    $additionaldata[$column] = $userinfo[$index];
+                }
+            }
+        }
+    }
+    $sql = "insert into user (userid, token, tokenexpiration, added, active";
+    foreach ($additionaldata as $column => $value) $sql .= ", ".$column;
+    $sql .= ") values ('".$db->real_escape_string($facebookapp->userId)."', '".$db->real_escape_string($facebookapp->token)."', '".$db->real_escape_string($facebookapp->tokenExpires)."', '".$db->real_escape_string($now)."', '".$db->real_escape_string($now)."'";
+    foreach ($additionaldata as $column => $value) $sql .= ", '".$db->real_escape_string($value)."'";
+    $sql .= ") on duplicate key update token='".$db->real_escape_string($facebookapp->token)."', tokenexpiration='".$db->real_escape_string($facebookapp->tokenExpires)."', removed='0000-00-00 00:00:00', active='".$db->real_escape_string($now)."'";
+    foreach ($additionaldata as $column => $value) $sql .= ", ".$column."='".$db->real_escape_string($value)."'";
+    $db->query($sql);
 }
 
 /*	returns date formatted for databse	*/

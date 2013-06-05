@@ -28,11 +28,11 @@ $authorized = initFacebookApp(true,"read_stream,publish_stream");
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Feed</title>
-      <meta property="og:url" content="http://tomsapps.co/demo/feed.php">
+      <meta property="og:url" content="http://www.tomsapps.com/demo/feed.php">
     <meta property="og:title" content="tttt">
     <meta property="og:description" content="dddd">
-    <meta property="og:image" content="https://tomsapps.co/demo/images/logo.gif">
-      <meta property="og:video" content="https://tomsapps.co/demo/images/movie.swf">
+    <meta property="og:image" content="https://www.tomsapps.com/demo/images/logo.gif">
+      <meta property="og:video" content="https://www.tomsapps.com/demo/images/movie.swf">
       <meta property="og:video:type" content="application/x-shockwave-flash">
       <meta property="og:video:width" content="398">
       <meta property="og:video:height" content="224">
@@ -57,7 +57,7 @@ if (isset($_GET['post_id'])) {
 ?>
 
 <?php
-$imageurl = substr($_SERVER['SCRIPT_URI'],0,strrpos($_SERVER['SCRIPT_URI'],"/"))."/images/logo.gif";
+$imageurl = "http://".$_SERVER['HTTP_HOST'].substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'],"/"))."/images/logo.gif";
 $paramarray = array(	"redirect_uri"=>$facebookapp->getCanvasUrl('feed.php'), // back to this page
 						"link"=>$facebookapp->getCanvasUrl(''),
 						"picture"=>$imageurl,
@@ -73,14 +73,13 @@ $paramarray = array(	"redirect_uri"=>$facebookapp->getCanvasUrl('feed.php'), // 
 <p><a href="<?php echo $facebookapp->getFeedDialogUrl($paramarray); ?>" target="_top">Post Something</a></p>
 
 <?php
-$imageurl = substr($_SERVER['SCRIPT_URI'],0,strrpos($_SERVER['SCRIPT_URI'],"/"))."/images/logo.gif";
 $paramarray = array(	"redirect_uri"=>$facebookapp->getCanvasUrl('feed.php'), // back to this page
 						"link"=>"http://developfacebookapps.com");
 ?>
 <p><a href="<?php echo $facebookapp->getFeedDialogUrl($paramarray); ?>" target="_top">Post with Just Link</a></p>
 
 
-<h2>Graph API Post to Friend</h2>
+<h2>Graph API Post</h2>
 
 <?php
 
@@ -89,7 +88,7 @@ if (isset($_POST['message'])) {
 	// form was posted so post video to friend
 	
 	// movie needs to be https
-	$source = str_replace("http:","https:",substr($_SERVER['SCRIPT_URI'],0,strrpos($_SERVER['SCRIPT_URI'],"/"))."/images/movie.swf");
+	$source = "https://".$_SERVER['HTTP_HOST'].substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'],"/"))."/images/movie.swf";
 	
 	$paramarray = array(	"message"=>$_POST['message'], 
 							"link"=>$facebookapp->getCanvasUrl(''),
@@ -101,10 +100,10 @@ if (isset($_POST['message'])) {
 							"actions"=>array("name"=>"See Demos","link"=>$facebookapp->getCanvasUrl(''))
 						);
 	
-	$id = $facebookapp->postToFeed($_POST['to'],$paramarray);
-	
+	$id = $facebookapp->postToFeed("me",$paramarray);
+
 	if ($id !== false) {
-		$postinfo = $facebookapp->getGraphObject($id);
+		$postinfo = $facebookapp->getGraphObject($id['id']);
 		echo "<pre>Here is what you posted:\n\n";
 		print_r($postinfo);
 		echo "</pre>";
@@ -115,19 +114,6 @@ if (isset($_POST['message'])) {
 ?>
 
 <form action="" method="post">
-<p>Friend: <select name="to">
-<?php
-$friends = $facebookapp->getAllFriends();
-// let's sort them
-$friendstosort = array();
-foreach ($friends['data'] as $friend) {
-	$friendstosort[$friend['id']] = $friend['name'];
-}
-asort($friendstosort);
-foreach ($friendstosort as $id => $name) {
-	echo "<option value='".$id."'>".$name."</option>\n";
-}
-?></select></p>
 <p>Message: <input type="text" name="message"/></p>
 <input type="hidden" name="signed_request" value="<?php echo htmlspecialchars($_REQUEST['signed_request'],ENT_QUOTES); ?>"/>
 <p><input type="submit" value="Post"/></p>

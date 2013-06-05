@@ -39,7 +39,7 @@ class Cache {
 	public function __construct($prefix) {
 		$this->prefix = $prefix;
 		try {
-  			$this->db = new SQLiteDatabase($this->dbpath, 0666, $error);
+  			$this->db = new SQLite3($this->dbpath,SQLITE3_OPEN_READWRITE);
 		} catch(Exception $ex) {
 			// something went wrong, can't use caching
 			$dbpath = false;
@@ -57,9 +57,10 @@ class Cache {
 		if ($dbpath !== false) {
 			if (!$this->usingcron) $this->clearCache(); // if not using cron, clear the cache on each query
 			try {
-				$sql = "select val from cache where id='".sqlite_escape_string($this->getId($id))."'";
-				if ($result = $this->db->query($sql)) {
-					while ($row = $result->fetch(SQLITE_ASSOC)) {
+				$sql = "select val from cache where id='".$this->db->escapeString($this->getId($id))."'";
+				$result = $this->db->query($sql);
+				if ($result !== false) {
+					while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 						if ($jsondecode) {
 							$val = json_decode($row['val'],true);
 						} else {
@@ -81,8 +82,8 @@ class Cache {
 			$expiretime = strtotime($expire);
 			try {
 				if ($jsonencode) $val = json_encode($val);
-				$sql = "insert into cache(id,val,expire) values('".sqlite_escape_string($this->getId($id))."','".sqlite_escape_string($val)."',".$expiretime.")";
-				@$this->db->query($sql);
+				$sql = "insert into cache(id,val,expire) values('".$this->db->escapeString($this->getId($id))."','".$this->db->escapeString($val)."',".$expiretime.")";
+				$this->db->query($sql);
 				$set = true;
 			} catch (Exception $ex) {
 				$set = false;
